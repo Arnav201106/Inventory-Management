@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledgerly | Inventory Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-page">
+
+        <div class="login-card">
+
+            <div class="login-logo">◈</div>
+
+            <h1>Welcome to Ledgerly</h1>
+            <p>Sign in to manage your inventory</p>
+
+            <form id="loginForm">
+
+                <label>Username</label>
+                <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username" required>
+
+                <label>Password</label>
+
+                <div class="password-box">
+                    <input type="password" id="loginPassword" placeholder="Enter password"
+                        autocomplete="current-password" required>
+
+                    <button type="button" onclick="togglePassword()">
+                        Show
+                    </button>
+                </div>
+
+                <p id="loginError" class="login-error"></p>
+
+                <button type="submit" class="login-btn">
+                    Sign In →
+                </button>
+
+            </form>
+
+            <div class="demo-login">
+                <strong>Demo Credentials</strong>
+                <p>Username: admin</p>
+                <p>Password: admin123</p>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="app" id="mainApp" style="display: none;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">◈</span>
+                <div>
+                    <h2>Ledgerly</h2>
+                    <small>Inventory Manager</small>
+                </div>
+            </div>
+
+            <div class="menu-label">MAIN MENU</div>
+
+            <nav>
+                <button class="nav-item active" onclick="showPage('dashboard', this)">
+                    <span>▦</span> Dashboard
+                </button>
+
+                <button class="nav-item" onclick="showPage('products', this)">
+                    <span>▣</span> Products
+                </button>
+
+                <button class="nav-item" onclick="showPage('inventory', this)">
+                    <span>▤</span> Inventory
+                </button>
+
+                <button class="nav-item" onclick="showPage('sales', this)">
+                    <span>₹</span> Sales
+                </button>
+
+                <button class="nav-item" onclick="showPage('expenses', this)">
+                    <span>▧</span> Expenses
+                </button>
+
+                <button class="nav-item" onclick="showPage('reports', this)">
+                    <span>◫</span> Reports
+                </button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="shop-avatar">S</div>
+                <div>
+                    <strong>Demo Shop</strong>
+                    <small>Shop Administrator</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p>Welcome back! Here's your business overview.</p>
+                </div>
+
+                <div class="topbar-right">
+                    <span class="demo-badge">● Demo Mode</span>
+                    <button class="logout-btn" onclick="logout()">
+                        Logout
+                    </button>
+                    <div class="user-avatar">AD</div>
+                </div>
+            </header>
+
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="page active-page">
+
+                <div class="welcome-banner">
+                    <div>
+                        <span class="banner-tag">BUSINESS OVERVIEW</span>
+                        <h2>Manage your shop smarter.</h2>
+                        <p>Track inventory, monitor sales and stay on top of your business.</p>
+                    </div>
+                    <button class="white-btn" onclick="openProductModal()">+ Add Product</button>
+                </div>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Products</span>
+                            <div class="stat-icon blue">▣</div>
+                        </div>
+                        <h2 id="totalProducts">0</h2>
+                        <p>Products in your catalogue</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Stock Units</span>
+                            <div class="stat-icon purple">▤</div>
+                        </div>
+                        <h2 id="totalStock">0</h2>
+                        <p>Units currently available</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Sales</span>
+                            <div class="stat-icon green">₹</div>
+                        </div>
+                        <h2 id="totalSales">₹0</h2>
+                        <p>Recorded sales revenue</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Low Stock Alerts</span>
+                            <div class="stat-icon orange">!</div>
+                        </div>
+                        <h2 id="lowStockCount">0</h2>
+                        <p>Products needing attention</p>
+                    </div>
+
+                </div>
+
+                <div class="dashboard-grid">
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Recent Sales</h3>
+                                <p>Your latest transactions</p>
+                            </div>
+                            <button class="text-btn" onclick="showPage('sales')">View All →</button>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentSalesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Low Stock Products</h3>
+                                <p>Items that need restocking</p>
+                            </div>
+                        </div>
+                        <div id="lowStockList"></div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PRODUCTS -->
+            <section id="products" class="page">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Product Management</h2>
+                        <p>Add, edit and manage your shop products.</p>
+                    </div>
+                    <button class="primary-btn" onclick="document.getElementById('excelFile').click()">
+                        📊 Import Excel
+                    </button>
+
+                    <input type="file" id="excelFile" accept=".xlsx,.xls" style="display: none;"
+                        onchange="importExcel(event)">
+                    <button class="primary-btn" onclick="openProductModal()">+ Add Product</button>
+                </div>
+
+                <div class="panel">
+                    <div class="table-toolbar">
+                        <input type="text" id="productSearch" placeholder="Search products..."
+                            oninput="renderProducts()">
+                        <span id="productCountLabel">0 products</span>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Cost Price</th>
+                                    <th>Selling Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- INVENTORY -->
+            <section id="inventory" class="page">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Stock Inventory</h2>
+                        <p>Monitor stock availability and update quantities.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid three-cols">
+                    <div class="stat-card">
+                        <span>Total Stock</span>
+                        <h2 id="inventoryTotal">0</h2>
+                        <p>Available units</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Low Stock Items</span>
+                        <h2 id="inventoryLow">0</h2>
+                        <p>Need restocking</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Inventory Value</span>
+                        <h2 id="inventoryValue">₹0</h2>
+                        <p>Based on cost price</p>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Stock Overview</h3>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Available Stock</th>
+                                    <th>Stock Status</th>
+                                    <th>Update Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- SALES -->
+            <section id="sales" class="page">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Sales Management</h2>
+                        <p>Record sales and track transactions.</p>
+                    </div>
+                    <button class="primary-btn" onclick="openSaleModal()">+ Record Sale</button>
+                </div>
+
+                <div class="stats-grid three-cols">
+                    <div class="stat-card">
+                        <span>Total Revenue</span>
+                        <h2 id="salesRevenue">₹0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Total Transactions</span>
+                        <h2 id="salesTransactions">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Units Sold</span>
+                        <h2 id="salesUnits">0</h2>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Sales History</h3>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- EXPENSES -->
+            <section id="expenses" class="page">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Expense Tracking</h2>
+                        <p>Keep track of your daily business expenses.</p>
+                    </div>
+                    <button class="primary-btn" onclick="openExpenseModal()">+ Add Expense</button>
+                </div>
+
+                <div class="stats-grid three-cols">
+                    <div class="stat-card">
+                        <span>Total Expenses</span>
+                        <h2 id="expensesTotal">₹0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Expense Records</span>
+                        <h2 id="expensesCount">0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Expense Categories</span>
+                        <h2 id="expensesCategories">0</h2>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Expense History</h3>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expensesTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- REPORTS -->
+            <section id="reports" class="page">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Business Reports</h2>
+                        <p>Understand your shop's financial performance.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid three-cols">
+                    <div class="stat-card">
+                        <span>Total Revenue</span>
+                        <h2 id="reportRevenue">₹0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Cost of Goods Sold</span>
+                        <h2 id="reportCOGS">₹0</h2>
+                    </div>
+
+                    <div class="stat-card">
+                        <span>Estimated Profit/Loss</span>
+                        <h2 id="reportProfit">₹0</h2>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Financial Summary</h3>
+                    </div>
+
+                    <div class="financial-row">
+                        <span>Total Sales Revenue</span>
+                        <strong id="summaryRevenue">₹0</strong>
+                    </div>
+
+                    <div class="financial-row">
+                        <span>Cost of Goods Sold</span>
+                        <strong id="summaryCOGS">₹0</strong>
+                    </div>
+
+                    <div class="financial-row">
+                        <span>Operating Expenses</span>
+                        <strong id="summaryExpenses">₹0</strong>
+                    </div>
+
+                    <div class="financial-row total-row">
+                        <span>Estimated Net Profit / Loss</span>
+                        <strong id="summaryProfit">₹0</strong>
+                    </div>
+
+                    <p class="report-note">
+                        Note: This is a simplified prototype calculation.
+                        Estimated profit = Sales Revenue - Cost of Goods Sold - Recorded Expenses.
+                        It is not a complete accounting system.
+                    </p>
+                </div>
+                <!-- FINANCIAL PIE CHART -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <h3>Financial Analysis</h3>
+                            <p>Visual representation of business finances</p>
+                        </div>
+
+                        <button class="primary-btn" onclick="togglePieChart()">
+                            📊 View Pie Chart
+                        </button>
+                    </div>
+
+                    <div id="pieChartContainer" class="chart-container">
+
+                        <h3>Business Financial Overview</h3>
+
+                        <div class="chart-wrapper">
+                            <canvas id="financialPieChart"></canvas>
+                        </div>
+
+                        <p class="report-note">
+                            This chart displays the distribution of recorded
+                            costs, expenses and estimated profit.
+                        </p>
+
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- PRODUCT MODAL -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Add New Product</h2>
+                <button class="close-btn" onclick="closeModal('productModal')">×</button>
+            </div>
+
+            <form id="productForm">
+                <input type="hidden" id="editProductId">
+
+                <label>Product Name</label>
+                <input type="text" id="productName" required placeholder="e.g. Rice 1kg">
+
+                <label>Category</label>
+                <select id="productCategory" required>
+                    <option value="Grocery">Grocery</option>
+                    <option value="Stationery">Stationery</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <div class="form-row">
+                    <div>
+                        <label>Cost Price (₹)</label>
+                        <input type="number" id="productCost" min="0" step="0.01" required>
+                    </div>
+                    <div>
+                        <label>Selling Price (₹)</label>
+                        <input type="number" id="productPrice" min="0" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Stock Quantity</label>
+                        <input type="number" id="productStock" min="0" step="1" required>
+                    </div>
+                    <div>
+                        <label>Low Stock Limit</label>
+                        <input type="number" id="productLimit" min="0" step="1" value="5" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="primary-btn full-btn">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SALE MODAL -->
+    <div id="saleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Record New Sale</h2>
+                <button class="close-btn" onclick="closeModal('saleModal')">×</button>
+            </div>
+
+            <form id="saleForm">
+                <label>Select Product</label>
+                <select id="saleProduct" required></select>
+
+                <label>Quantity</label>
+                <input type="number" id="saleQuantity" min="1" step="1" required>
+
+                <button type="submit" class="primary-btn full-btn">Record Sale</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- EXPENSE MODAL -->
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Expense</h2>
+                <button class="close-btn" onclick="closeModal('expenseModal')">×</button>
+            </div>
+
+            <form id="expenseForm">
+                <label>Description</label>
+                <input type="text" id="expenseDescription" required placeholder="e.g. Electricity Bill">
+
+                <label>Category</label>
+                <select id="expenseCategory">
+                    <option>Rent</option>
+                    <option>Electricity</option>
+                    <option>Transport</option>
+                    <option>Salary</option>
+                    <option>Other</option>
+                </select>
+
+                <label>Amount (₹)</label>
+                <input type="number" id="expenseAmount" min="0.01" step="0.01" required>
+
+                <button type="submit" class="primary-btn full-btn">Save Expense</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
